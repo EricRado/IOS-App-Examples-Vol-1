@@ -13,7 +13,7 @@ import Speech
 
 private let reuseIdentifier = "Cell"
 
-class MemoriesCollectionViewController: UICollectionViewController , UIImagePickerControllerDelegate, UINavigationControllerDelegate{
+class MemoriesCollectionViewController: UICollectionViewController , UIImagePickerControllerDelegate, UINavigationControllerDelegate, UICollectionViewDelegateFlowLayout{
     
     var memories = [URL]()
     
@@ -69,6 +69,59 @@ class MemoriesCollectionViewController: UICollectionViewController , UIImagePick
     
     func saveNewMemory(image: UIImage){
         
+        // create a unique name for this memory
+        let memoryName = "memory-\(Date().timeIntervalSince1970)"
+        
+        // use the unique name to create filenames for the
+        //full-size image and the thumbnail
+        let imageName = memoryName + ".jpg"
+        let thumbnailName = memoryName + ".thumb"
+        
+        do {
+            // create a URL where we can write the JPEG to
+            let imagePath = getDocumentsDirectory().appendingPathComponent(imageName)
+            
+            // convert the UIImage into a JPEG data object
+            if let jpegData = UIImageJPEGRepresentation(image, 80){
+                try jpegData.write(to: imagePath, options: [.atomicWrite])
+            }
+            
+            // create thumbnail
+            if let thumbnail = resize(image: image, to: 200){
+                let imagePath = getDocumentsDirectory().appendingPathComponent(thumbnailName)
+                if let jpegData = UIImageJPEGRepresentation(thumbnail, 80){
+                    try jpegData.write(to: imagePath, options: [.atomicWrite])
+                }
+            }
+            
+        } catch {
+            print("Failed to save to disk")
+        }
+        
+    }
+    
+    func resize(image: UIImage, to width: CGFloat) -> UIImage? {
+        
+        // calculate how much we need to bring the width down to match our target size
+        let scale = width / image.size.width
+        
+        // bring the height down by the same amount so that the aspect ratio is preserved
+        let height = image.size.height * scale
+        
+        // create a new image context we can draw into
+        UIGraphicsBeginImageContextWithOptions(CGSize(width: width, height: height), false, 0)
+        
+        // draw the original image into the context
+        image.draw(in: CGRect(x: 0, y: 0, width: width, height: height))
+        
+        // pull out the resized version
+        let newImage = UIGraphicsGetImageFromCurrentImageContext()
+        
+        // end the context so UIKit can clean up
+        UIGraphicsEndImageContext()
+        
+        // send it back to the caller
+        return newImage
     }
     
     
@@ -128,26 +181,60 @@ class MemoriesCollectionViewController: UICollectionViewController , UIImagePick
             }
         }
     }
-
-    override func numberOfSections(in collectionView: UICollectionView) -> Int {
-        // #warning Incomplete implementation, return the number of sections
-        return 0
+    
+    func imageURL(for memory: URL) -> URL {
+        return memory.appendingPathExtension("jpg")
+    }
+    
+    func thumbnailURL(for memory: URL) -> URL {
+        return memory.appendingPathExtension("thumb")
+    }
+    
+    func audioURL(for memory: URL) -> URL {
+        return memory.appendingPathExtension("m4a")
+    }
+    
+    func transcriptionURL(for memory: URL) -> URL {
+        return memory.appendingPathExtension("txt")
     }
 
+    override func numberOfSections(in collectionView: UICollectionView) -> Int {
+        return 2
+    }
 
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        // #warning Incomplete implementation, return the number of items
-        return 0
+        if section == 0 {
+            return 0
+        }else {
+            return memories.count
+        }
+        
     }
 
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier, for: indexPath)
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "Memory", for: indexPath) as! MemoryCell
     
         // Configure the cell
+        let memory = memories[indexPath.row]
+        let imageName = thumbnailURL(for: memory).path
+        let image = UIImage(contentsOfFile: imageName)
+        cell.imageView.image = image
     
         return cell
     }
-
+    
+    override func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
+        return collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: "Header", for: indexPath)
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
+        if section == 1 {
+            return CGSize.zero
+        } else {
+            return CGSize(width: 0, height: 50)
+        }
+    }
+    
     // MARK: UICollectionViewDelegate
 
     /*
