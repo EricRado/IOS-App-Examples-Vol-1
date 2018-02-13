@@ -12,6 +12,8 @@
 		0784B6162032B58C005C4113 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0784B6142032B58C005C4113 /* Main.storyboard */; };
 		0784B6182032B58C005C4113 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0784B6172032B58C005C4113 /* Assets.xcassets */; };
 		0784B61B2032B58C005C4113 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0784B6192032B58C005C4113 /* LaunchScreen.storyboard */; };
+		07DE0E6A2033447A007A2D86 /* MemoriesCollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07DE0E692033447A007A2D86 /* MemoriesCollectionViewController.swift */; };
+		07DE0E6C2033457A007A2D86 /* MemoryCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07DE0E6B2033457A007A2D86 /* MemoryCell.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -22,6 +24,8 @@
 		0784B6172032B58C005C4113 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		0784B61A2032B58C005C4113 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		0784B61C2032B58C005C4113 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		07DE0E692033447A007A2D86 /* MemoriesCollectionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MemoriesCollectionViewController.swift; sourceTree = "<group>"; };
+		07DE0E6B2033457A007A2D86 /* MemoryCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MemoryCell.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -60,6 +64,8 @@
 				0784B6172032B58C005C4113 /* Assets.xcassets */,
 				0784B6192032B58C005C4113 /* LaunchScreen.storyboard */,
 				0784B61C2032B58C005C4113 /* Info.plist */,
+				07DE0E692033447A007A2D86 /* MemoriesCollectionViewController.swift */,
+				07DE0E6B2033457A007A2D86 /* MemoryCell.swift */,
 			);
 			path = HappyDays;
 			sourceTree = "<group>";
@@ -136,8 +142,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				07DE0E6C2033457A007A2D86 /* MemoryCell.swift in Sources */,
 				0784B6132032B58C005C4113 /* ViewController.swift in Sources */,
 				0784B6112032B58C005C4113 /* AppDelegate.swift in Sources */,
+				07DE0E6A2033447A007A2D86 /* MemoriesCollectionViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
