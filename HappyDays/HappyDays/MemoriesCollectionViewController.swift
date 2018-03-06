@@ -16,7 +16,7 @@ import MobileCoreServices
 private let reuseIdentifier = "Cell"
 
 
-class MemoriesCollectionViewController: UICollectionViewController , UIImagePickerControllerDelegate, UINavigationControllerDelegate, UICollectionViewDelegateFlowLayout, AVAudioRecorderDelegate{
+class MemoriesCollectionViewController: UICollectionViewController , UIImagePickerControllerDelegate, UINavigationControllerDelegate, UICollectionViewDelegateFlowLayout, AVAudioRecorderDelegate, UISearchBarDelegate{
     
     var memories = [URL]()
     var filteredMemories = [URL]()
@@ -25,6 +25,8 @@ class MemoriesCollectionViewController: UICollectionViewController , UIImagePick
     var audioRecorder: AVAudioRecorder?
     var recordingURL: URL!
     var audioPlayer: AVAudioPlayer?
+    
+    var searchQuery: CSSearchQuery?
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -166,6 +168,7 @@ class MemoriesCollectionViewController: UICollectionViewController , UIImagePick
                 memories.append(memoryPath)
             }
         }
+        filteredMemories = memories
         
         // reload our list of memories
         collectionView?.reloadSections(IndexSet(integer: 1))
@@ -213,7 +216,7 @@ class MemoriesCollectionViewController: UICollectionViewController , UIImagePick
             let cell = sender.view as! MemoryCell
             
             if let index = collectionView?.indexPath(for: cell){
-                activeMemory = memories[index.row]
+                activeMemory = filteredMemories[index.row]
                 recordMemory()
             }
         }else if sender.state == .ended {
@@ -245,6 +248,7 @@ class MemoriesCollectionViewController: UICollectionViewController , UIImagePick
             // create the audio recording, and assign ourselves as the delegate
             audioRecorder = try AVAudioRecorder(url: recordingURL, settings: settings)
             audioRecorder?.delegate = self
+            print("RECORDING...")
             audioRecorder?.record()
             
         }catch let error {
@@ -263,19 +267,24 @@ class MemoriesCollectionViewController: UICollectionViewController , UIImagePick
     func finishRecording(success: Bool) {
         collectionView?.backgroundColor = UIColor.darkGray
         
+        print("RECORDING STOPPED...")
         audioRecorder?.stop()
         
         if success {
             do {
-                let memoryAudioURL = activeMemory.appendingPathComponent("m4a")
+                let memoryAudioURL = activeMemory.appendingPathExtension("m4a")
+                print(memoryAudioURL)
                 let fm = FileManager.default
                 
                 if fm.fileExists(atPath: memoryAudioURL.path) {
                     try fm.removeItem(at: memoryAudioURL)
                 }
                 
+                print("MOVING FILE...")
+                /* ERROR HERE */
                 try fm.moveItem(at: recordingURL, to: memoryAudioURL)
                 
+                print("TRANSCRIBING...")
                 transcribeAudio(memory: activeMemory)
             }catch let error{
                 print("Failure finishing recording: \(error)")
@@ -340,6 +349,53 @@ class MemoriesCollectionViewController: UICollectionViewController , UIImagePick
         }
     }
     
+    // Search bar methods
+    
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        filterMemories(text: searchText)
+    }
+    
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        searchBar.resignFirstResponder()
+    }
+    
+    func filterMemories(text: String){
+        guard text.count > 0 else {
+            filteredMemories = memories
+            
+            UIView.performWithoutAnimation {
+                collectionView?.reloadSections(IndexSet(integer: 1))
+            }
+            
+            return
+        }
+        
+        var allItems = [CSSearchableItem]()
+        
+        searchQuery?.cancel()
+        
+        let queryString = "contentDescription == \"*\(text)*\"c"
+        searchQuery = CSSearchQuery(queryString: queryString, attributes: nil)
+        
+        searchQuery?.foundItemsHandler = { items in
+            allItems.append(contentsOf: items)
+        }
+        
+        searchQuery?.completionHandler = { error in
+            DispatchQueue.main.async { [unowned self] in
+                self.activateFilter(matches: allItems)
+            }
+        }
+        
+        searchQuery?.start()
+    }
+    
+    func activateFilter(matches: [CSSearchableItem]){
+        filteredMemories = matches.map({ (item) in
+            return URL(fileURLWithPath: item.uniqueIdentifier)
+        })
+    }
+    
     // UICollectionView methods
 
     override func numberOfSections(in collectionView: UICollectionView) -> Int {
@@ -350,7 +406,7 @@ class MemoriesCollectionViewController: UICollectionViewController , UIImagePick
         if section == 0 {
             return 0
         }else {
-            return memories.count
+            return filteredMemories.count
         }
         
     }
@@ -359,7 +415,7 @@ class MemoriesCollectionViewController: UICollectionViewController , UIImagePick
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "Memory", for: indexPath) as! MemoryCell
     
         // Configure the cell
-        let memory = memories[indexPath.row]
+        let memory = filteredMemories[indexPath.row]
         let imageName = thumbnailURL(for: memory).path
         let image = UIImage(contentsOfFile: imageName)
         cell.imageView.image = image
@@ -379,7 +435,7 @@ class MemoriesCollectionViewController: UICollectionViewController , UIImagePick
     }
     
     override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        let memory = memories[indexPath.row]
+        let memory = filteredMemories[indexPath.row]
         let fm = FileManager.default
         
         do {
