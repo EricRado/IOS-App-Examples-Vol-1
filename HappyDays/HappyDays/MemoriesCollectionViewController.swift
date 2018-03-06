@@ -10,6 +10,8 @@ import UIKit
 import AVFoundation
 import Photos
 import Speech
+import CoreSpotlight
+import MobileCoreServices
 
 private let reuseIdentifier = "Cell"
 
@@ -21,6 +23,7 @@ class MemoriesCollectionViewController: UICollectionViewController , UIImagePick
     var activeMemory: URL!
     var audioRecorder: AVAudioRecorder?
     var recordingURL: URL!
+    var audioPlayer: AVAudioPlayer?
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -218,6 +221,7 @@ class MemoriesCollectionViewController: UICollectionViewController , UIImagePick
     }
     
     func recordMemory() {
+        audioPlayer?.stop()
         collectionView?.backgroundColor = UIColor(red: 0.5, green: 0, blue: 0, alpha: 1)
         
         // this just saves me writing AVAudioSession.sharedInstance() everywhere
@@ -304,11 +308,16 @@ class MemoriesCollectionViewController: UICollectionViewController , UIImagePick
                 // ... and write it to disk at the correct filename for this memory.
                 do {
                     try text.write(to: transcription, atomically: true, encoding: String.Encoding.utf8)
+                    self.indexMemory(memory: memory, text: text)
                 }catch {
                     print("Failed to save transcription.")
                 }
             }
         }
+    }
+    
+    func indexMemory(memory: URL, text: String) {
+        
     }
     
     // UICollectionView methods
@@ -347,6 +356,28 @@ class MemoriesCollectionViewController: UICollectionViewController , UIImagePick
         }
     
         return cell
+    }
+    
+    override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        let memory = memories[indexPath.row]
+        let fm = FileManager.default
+        
+        do {
+            let audioName = audioURL(for: memory)
+            let transcriptionName = transcriptionURL(for: memory)
+            
+            if fm.fileExists(atPath: audioName.path){
+                audioPlayer = try AVAudioPlayer(contentsOf: audioName)
+                audioPlayer?.play()
+            }
+            
+            if fm.fileExists(atPath: transcriptionName.path) {
+                let contents = try String(contentsOf: transcriptionName)
+                print(contents)
+            }
+        }catch {
+            print("Error loading audio")
+        }
     }
     
     override func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
