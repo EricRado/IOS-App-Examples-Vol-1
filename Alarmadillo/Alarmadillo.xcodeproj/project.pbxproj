@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		07087CA4208D4F05009691FA /* Helper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07087CA3208D4F05009691FA /* Helper.swift */; };
 		074B70C920890961008F4465 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 074B70C820890961008F4465 /* AppDelegate.swift */; };
 		074B70CB20890961008F4465 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 074B70CA20890961008F4465 /* ViewController.swift */; };
 		074B70CE20890961008F4465 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 074B70CC20890961008F4465 /* Main.storyboard */; };
@@ -14,9 +15,12 @@
 		074B70D320890961008F4465 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 074B70D120890961008F4465 /* LaunchScreen.storyboard */; };
 		07577A08208946A300F20531 /* GroupViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07577A07208946A300F20531 /* GroupViewController.swift */; };
 		07577A0A208946CE00F20531 /* AlarmViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07577A09208946CE00F20531 /* AlarmViewController.swift */; };
+		07577A0D2089516400F20531 /* Alarm.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07577A0C2089516400F20531 /* Alarm.swift */; };
+		07577A0F208951A300F20531 /* Group.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07577A0E208951A300F20531 /* Group.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		07087CA3208D4F05009691FA /* Helper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Helper.swift; sourceTree = "<group>"; };
 		074B70C520890961008F4465 /* Alarmadillo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Alarmadillo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		074B70C820890961008F4465 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		074B70CA20890961008F4465 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -26,6 +30,8 @@
 		074B70D420890961008F4465 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		07577A07208946A300F20531 /* GroupViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupViewController.swift; sourceTree = "<group>"; };
 		07577A09208946CE00F20531 /* AlarmViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlarmViewController.swift; sourceTree = "<group>"; };
+		07577A0C2089516400F20531 /* Alarm.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Alarm.swift; sourceTree = "<group>"; };
+		07577A0E208951A300F20531 /* Group.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Group.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -58,6 +64,7 @@
 		074B70C720890961008F4465 /* Alarmadillo */ = {
 			isa = PBXGroup;
 			children = (
+				07577A0B2089512F00F20531 /* Model */,
 				074B70C820890961008F4465 /* AppDelegate.swift */,
 				074B70CA20890961008F4465 /* ViewController.swift */,
 				074B70CC20890961008F4465 /* Main.storyboard */,
@@ -68,6 +75,16 @@
 				07577A09208946CE00F20531 /* AlarmViewController.swift */,
 			);
 			path = Alarmadillo;
+			sourceTree = "<group>";
+		};
+		07577A0B2089512F00F20531 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				07577A0C2089516400F20531 /* Alarm.swift */,
+				07577A0E208951A300F20531 /* Group.swift */,
+				07087CA3208D4F05009691FA /* Helper.swift */,
+			);
+			path = Model;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -143,7 +160,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				07577A0A208946CE00F20531 /* AlarmViewController.swift in Sources */,
+				07087CA4208D4F05009691FA /* Helper.swift in Sources */,
 				07577A08208946A300F20531 /* GroupViewController.swift in Sources */,
+				07577A0D2089516400F20531 /* Alarm.swift in Sources */,
+				07577A0F208951A300F20531 /* Group.swift in Sources */,
 				074B70CB20890961008F4465 /* ViewController.swift in Sources */,
 				074B70C920890961008F4465 /* AppDelegate.swift in Sources */,
 			);
