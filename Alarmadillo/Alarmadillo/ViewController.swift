@@ -68,13 +68,16 @@ class ViewController: UITableViewController {
     }
     
     @objc func addGroup() {
+        print("RUNNING ADDGROUP...")
         let newGroup = Group(name: "Name this alarm",
                 playSound: true, enabled: false, alarms: [])
         groups.append(newGroup)
         
+        print("About to perform segue...")
         performSegue(withIdentifier: "EditGroup", sender: newGroup)
-        
+        print("Finish performing segue...")
         save()
+        print("Finish saving ...")
     }
     
     @objc func save() {

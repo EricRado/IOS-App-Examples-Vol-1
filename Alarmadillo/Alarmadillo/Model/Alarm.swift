@@ -8,7 +8,7 @@
 
 import UIKit
 
-class Alarm: NSObject {
+class Alarm: NSObject, NSCoding {
     var id: String
     var name: String
     var caption: String

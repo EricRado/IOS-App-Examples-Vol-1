@@ -16,9 +16,10 @@ class GroupViewController: UITableViewController, UITextFieldDelegate {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        print("INSIDE GROUP VIEW CONTROLLER...")
         // Do any additional setup after loading the view.
         navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(addAlarm))
+        
         title = group.name
     }
     

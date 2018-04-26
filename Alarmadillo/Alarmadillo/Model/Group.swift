@@ -8,7 +8,7 @@
 
 import UIKit
 
-class Group: NSObject {
+class Group: NSObject, NSCoding {
     var id: String
     var name: String
     var playSound: Bool
